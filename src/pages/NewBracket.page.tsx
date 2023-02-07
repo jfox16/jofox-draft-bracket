@@ -9,7 +9,7 @@ import { makeUniqueKey } from '../makeUniqueKey';
 
 export const NewBracketPage = () => {
   const [ numberOfMatchesPerPlayer, setNumberOfMatchesPerPlayer ] = useState<number>(3);
-  const { playerRecord, getPlayerNameByKey } = useContext(PlayerContext);
+  const { playerRecord } = useContext(PlayerContext);
   const { setMatchRecord } = useContext(BracketContext);
 
   const makeBracket = () => {
@@ -17,10 +17,6 @@ export const NewBracketPage = () => {
     const balancedMatchups = getBalancedMatchups(playerIds, numberOfMatchesPerPlayer);
     const matchRecord: MatchRecord = {}
     balancedMatchups.forEach((matchup: IdString[], i: number) => {
-      const balancedMatchupNames = [
-        getPlayerNameByKey(matchup[0]),
-        getPlayerNameByKey(matchup[1])
-      ];
       matchRecord[makeUniqueKey('match')] = {
         name: `Match ${i+1}`,
         playerKeys: matchup
@@ -31,9 +27,20 @@ export const NewBracketPage = () => {
 
   return (
     <div>
+      <h1>Generate a Draft Bracket</h1>
       <PlayerList editable />
-      <input onChange={(e) => setNumberOfMatchesPerPlayer(Number(e.target.value))} value={numberOfMatchesPerPlayer} />
-      <button onClick={makeBracket}>Make Bracket</button>
+      <div style={{marginTop: 20}}>
+        <p style={{display: 'inline', marginRight: 5}}>Number of matches per player</p>
+        <input
+          onChange={(e) => setNumberOfMatchesPerPlayer(Number(e.target.value))}
+          value={numberOfMatchesPerPlayer}
+          style={{display: 'span', width: 40}}
+          type="number"
+        />
+      </div>
+      <div style={{marginTop: 20}}>
+        <button onClick={makeBracket} style={{fontSize: 16, width: 206}}>Make Bracket</button>
+      </div>
       <BracketDisplay />
     </div>
   )

@@ -21,7 +21,7 @@ export const PlayerList = (props: PlayerListProps) => {
           updatePlayer={(playerUpdates: Partial<Player>) => updatePlayer(key, playerUpdates)}
           key={key}
           />)}
-      {editable && <button onClick={() => addPlayer()}>+ Add Player</button>}
+      {editable && <button onClick={() => addPlayer()} style={{width: 206}}>+ Add Player</button>}
     </div>
   )
 }

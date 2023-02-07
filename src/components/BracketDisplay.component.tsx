@@ -3,7 +3,7 @@ import { MatchList } from "./MatchList";
 export const BracketDisplay = () => {
 
   return (
-    <div>
+    <div style={{marginTop: 40}}>
       <MatchList />
     </div>
   )

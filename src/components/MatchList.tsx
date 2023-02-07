@@ -38,6 +38,8 @@ export const MatchList = () => {
   return (
     <div style={{
       display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
     }}>
       {Object.entries.length > 0 ? Object.entries(matchRecord).map(([key, match]) => (
         <MatchListItem
