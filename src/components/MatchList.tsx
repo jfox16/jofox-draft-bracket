@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { BracketContext } from "../contexts/Bracket.context";
 import { PlayerContext } from "../contexts/Player.context";
-import { IdString, Match, Player } from "../util/types.util";
+import { Match, Player } from "../util/types.util";
 
 interface MatchListItemProps {
   match: Match;
@@ -10,11 +10,6 @@ interface MatchListItemProps {
 export const MatchList = () => {
   const { playerRecord } = useContext(PlayerContext);
   const { matchRecord } = useContext(BracketContext);
-
-  const getPlayerNameById = (idString: IdString) => {
-    const name = playerRecord[idString];
-    return String(name);
-  }
   
 
   const MatchListItem = (props: MatchListItemProps) => {
