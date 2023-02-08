@@ -57,7 +57,7 @@ export const usePlayerContextValue = (): IPlayerContext => {
     return playerRecord[playerKey].name;
   }
 
-  console.log('usePlayerContextValue', { playerRecord })
+  // console.log('usePlayerContextValue', { playerRecord })
 
   return {
     playerRecord,

@@ -10,11 +10,14 @@ import { makeUniqueKey } from '../makeUniqueKey';
 export const NewBracketPage = () => {
   const [ numberOfMatchesPerPlayer, setNumberOfMatchesPerPlayer ] = useState<number>(3);
   const { playerRecord } = useContext(PlayerContext);
-  const { setMatchRecord } = useContext(BracketContext);
+  const { setMatchRecord, setMatchCounts } = useContext(BracketContext);
 
   const makeBracket = () => {
     const playerIds = Object.keys(playerRecord);
-    const balancedMatchups = getBalancedMatchups(playerIds, numberOfMatchesPerPlayer);
+    const [
+      balancedMatchups,
+      matchCounts
+    ] = getBalancedMatchups(playerIds, numberOfMatchesPerPlayer);
     const matchRecord: MatchRecord = {}
     balancedMatchups.forEach((matchup: IdString[], i: number) => {
       matchRecord[makeUniqueKey('match')] = {
@@ -23,6 +26,7 @@ export const NewBracketPage = () => {
       };
     });
     setMatchRecord(matchRecord);
+    setMatchCounts(matchCounts);
   }
 
   return (

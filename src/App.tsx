@@ -7,7 +7,7 @@ function App() {
   const playerContextValue = usePlayerContextValue();
   const bracketContextValue = useBracketContextValue();
   return (
-    <div className="App">
+    <div className="App" style={{margin: 'auto', maxWidth: 800, paddingBottom: 40}}>
       <PlayerContext.Provider value={playerContextValue}>
         <BracketContext.Provider value={bracketContextValue}>
           <AppRouter />

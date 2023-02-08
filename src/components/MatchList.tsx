@@ -10,7 +10,6 @@ interface MatchListItemProps {
 export const MatchList = () => {
   const { playerRecord } = useContext(PlayerContext);
   const { matchRecord } = useContext(BracketContext);
-  
 
   const MatchListItem = (props: MatchListItemProps) => {
     const { match } = props;
@@ -20,11 +19,11 @@ export const MatchList = () => {
     return (
       <div style={{
         border: '1px solid white',
-        minWidth: 200,
+        minWidth: 180,
       }}>
         <h3>{match.name}</h3>
         <p style={{marginBottom: 4}}>{player1.name}</p>
-        <p style={{margin: 0}}> -VS- </p>
+        <p style={{margin: 0}}> - VS - </p>
         <p style={{marginTop: 4}}>{player2.name}</p>
       </div>
     )
