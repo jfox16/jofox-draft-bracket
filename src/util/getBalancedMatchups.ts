@@ -1,93 +1,5 @@
 import { IdString } from "./types.util";
 
-
-const getLegalIndexMatchups = (numPlayers: number) => {
-  const legalMatchups: number[][] = [];
-  for (let i = 0; i < numPlayers-1; i++) {
-    for (let j = 0; j < numPlayers-1-i; j++) {
-      legalMatchups.push(matchupMap[i][j]);
-    }
-  }
-  return legalMatchups;
-}
-
-const getBalancedMatchupsInOrder = (
-  numPlayers: number,
-  minMatchupsPerPlayer: number
-): [
-  number[][],
-  number[]
-] => {
-  const balancedOrder: number[][] = [];
-  let matchupPool: number[][] = [];
-  const matchupCounts: number[] = Array(numPlayers);
-  matchupCounts.fill(0);
-  const countCounts: number[] = Array(minMatchupsPerPlayer + 1);
-  countCounts.fill(0)
-  countCounts[0] = numPlayers;
-
-  let currentLowestMatchupCount = 0;
-  let asdf = 0;
-
-  while (currentLowestMatchupCount < minMatchupsPerPlayer && asdf < 50) {
-    if (matchupPool.length === 0) {
-      matchupPool = getLegalIndexMatchups(numPlayers);
-    }
-    // console.log('getMatchupsInBalancedOrder', { matchupPool, countCounts, matchupCounts, currentLowestMatchupCount });
-    for (let i = 0; i < matchupPool.length; i++) {
-      const matchup = matchupPool[i];
-      const player1 = matchup[0];
-      const player2 = matchup[1];
-      const player1MatchupCount = matchupCounts[player1];
-      const player2MatchupCount = matchupCounts[player2];
-      let shouldAddMatchup = false;
-
-      if (countCounts[currentLowestMatchupCount + 1] === numPlayers - 1) {
-        if (
-          player1MatchupCount === currentLowestMatchupCount
-          || player2MatchupCount === currentLowestMatchupCount
-        ) {
-          shouldAddMatchup = true;
-        }
-      }
-      else {
-        if (
-          player1MatchupCount === currentLowestMatchupCount
-          && player2MatchupCount === currentLowestMatchupCount
-        ) {
-          shouldAddMatchup = true;
-        }
-      }
-
-      if (shouldAddMatchup) {
-        balancedOrder.push(matchup);
-        matchupCounts[player1] += 1;
-        matchupCounts[player2] += 1;
-        countCounts[matchupCounts[player1]] += 1;
-        countCounts[matchupCounts[player2]] += 1;
-
-        if (
-          countCounts[matchupCounts[player1]] === numPlayers
-          || countCounts[matchupCounts[player2]] === numPlayers
-        ) {
-          currentLowestMatchupCount++;
-        }
-        matchupPool.splice(i, 1);
-        break;
-      }
-    }
-    asdf++;
-  }
-
-  console.info('matchupCounts', matchupCounts);
-  console.info('balancedOrder', balancedOrder);
-
-  return [
-    balancedOrder,
-    matchupCounts
-  ];
-}
-
 const shuffleArray = (array: any[]) => {
   let curr_i = array.length;
   let rand_i;
@@ -114,68 +26,128 @@ export const getBalancedMatchups = (
       return [] as any;
   }
 
-  const [
-    matchupsInBalancedOrder,
-    matchupCounts
-  ] = getBalancedMatchupsInOrder(playerIds.length, minNumMatchupsPerPlayer);
+  const [indexMatchups, indexMatchupCounts ] = getBalancedMatchupsV2(playerIds.length, minNumMatchupsPerPlayer);
 
   if (randomized) {
     shuffleArray(playerIds);
   }
 
-  const balancedMatchups =  matchupsInBalancedOrder.map( ([ i1, i2 ]) => [ playerIds[i1], playerIds[i2] ] );
+  const idMatchups =  indexMatchups.map( ([ i1, i2 ]) => [ playerIds[i1], playerIds[i2] ] );
   const idMatchupCounts: Record<IdString, number> = {};
-  for (let i = 0; i < matchupCounts.length; i++) {
+  for (let i = 0; i < indexMatchupCounts.length; i++) {
     const id = playerIds[i];
-    const count = matchupCounts[i];
+    const count = indexMatchupCounts[i];
     idMatchupCounts[id] = count;
   }
 
   return [
-    balancedMatchups,
-    idMatchupCounts,
-  ]
+    idMatchups,
+    idMatchupCounts
+  ];
+}
 
+const getUniqueOpponents = (numPlayers: number) => {
+  const uniqueOpponents: number[][] = Array(numPlayers);
 
-  // let playerMatchupCounts: Record<string, number> = {};
-  // playerIds.forEach((playerId: string) => playerMatchupCounts[playerId] = 0);
+  for (let i = 0; i <  numPlayers; i++) {
+    const opp: number[] = [];
+    const halfPlayers = Math.floor(numPlayers/2);
+    // Add opponents from furthest to closest (if players were in a circle)
+    for (let j = 0; j <= halfPlayers; j++) {
+      console.info(i, j)
+      const closest = i + halfPlayers - j;
+      const otherClosest = i + halfPlayers + j;
+      console.info(numPlayers, halfPlayers, closest, otherClosest);
+      if (closest < numPlayers && closest !== i) {
+        opp.push(closest);
+      }
+      if (otherClosest < numPlayers && otherClosest !== closest) {
+        opp.push(otherClosest);
+      }
+    }
+    uniqueOpponents[i] = opp;
+  }
 
-  // let indexMatchupPool: number[][] = [];
+  console.info('uniqueOpponents', uniqueOpponents)
 
-  // let i = 0;
+  return uniqueOpponents;
+}
 
-  // while (i < 100) {
-  //   // indexMatchupPool gets refilled with legal matchups between existing player ids
-  //   if (indexMatchupPool.length === 0) {
-  //     indexMatchupPool = getLegalIndexMatchups(playerIds.length);
-  //   }
+const getBalancedMatchupsV2 = (
+  numPlayers: number,
+  minMatchups: number,
+): [
+  number[][],
+  number[]
+] => {
+  const balancedMatchups: number[][] = [];
 
-  //   // Pick random matchups from pool and remove
-  //   const rand_i = randomized ? Math.floor(Math.random()*indexMatchupPool.length) : 0;
-  //   const [ playerIdIndex1, playerIdIndex2 ] = indexMatchupPool[rand_i];
-  //   indexMatchupPool.splice(rand_i, 1);
-  //   const playerId1 = playerIds[playerIdIndex1];
-  //   const playerId2 = playerIds[playerIdIndex2];
+  const remainingMatchupOpponents: number[][] = getUniqueOpponents(numPlayers);
 
-  //   // If either player needs more matchups, add it to balancedMatchups.
-  //   const player1NeedsMoreMatchups = playerMatchupCounts[playerId1] < minNumMatchupsPerPlayer;
-  //   const player2NeedsMoreMatchups = playerMatchupCounts[playerId2] < minNumMatchupsPerPlayer;
+  const playerMatchupCount: number[] = Array(numPlayers);
+  playerMatchupCount.fill(0);
+
+  const numPlayersAtMatchup: number[] = Array(minMatchups+2);
+  numPlayersAtMatchup.fill(0);
+  numPlayersAtMatchup[0] = numPlayers;
+
+  let currentMinMatchups = 0;
+  let tries = 0;
+
+  while (currentMinMatchups < minMatchups && tries < 100) {
+    const player = tries % numPlayers;
+
+    const possibleOpponents = remainingMatchupOpponents[player];
+    let opponentToAdd = -1;
+
+    const playerCount = playerMatchupCount[player];
+    const canAddPlayer = playerCount === currentMinMatchups || numPlayersAtMatchup[currentMinMatchups] === 1;
+
+    if (canAddPlayer) {
+      for (let i = 0; i < possibleOpponents.length; i++) {
+        // if opponent has <currentMinMatchups> minMatchups, it needs a matchup. Add as opponent
+        const opponent = possibleOpponents[i];
+        const opponentCount = playerMatchupCount[opponent];
+        const canAddOpponent = opponentCount === currentMinMatchups;
+  
+        if (canAddOpponent) {
+          possibleOpponents.splice(i, 1);
+          opponentToAdd = opponent;
+          break;
+        }
+      }
+    }
+
+    if (opponentToAdd > -1) {
+      
+      const matchup = [ player, opponentToAdd ];
+
+      matchup.forEach((_player) => {
+        numPlayersAtMatchup[playerMatchupCount[_player]]--;
+        playerMatchupCount[_player]++;
+        numPlayersAtMatchup[playerMatchupCount[_player]]++;
+      });
+
+      balancedMatchups.push([ player, opponentToAdd ]);
+    }
     
-  //   if (player1NeedsMoreMatchups && player2NeedsMoreMatchups) {
-  //     balancedMatchups.push([ playerId1, playerId2 ]);
-  //     playerMatchupCounts[playerId1] = playerMatchupCounts[playerId1] + 1;
-  //     playerMatchupCounts[playerId2] = playerMatchupCounts[playerId2] + 1;
-  //     if (!Object.values(playerMatchupCounts).some((count: number) => count < minNumMatchupsPerPlayer)) {
-  //       break;
-  //     }
-  //   }
 
-  //   i++;
-  // }
+    if (numPlayersAtMatchup[currentMinMatchups] === 0) {
+      currentMinMatchups++;
+      tries = 0;
+    }
+    else {
+      tries++;
+    }
+  }
+  
 
-  // console.info(' --- getBalancedMatchups called ---', { playerMatchupCounts });
+  console.info('getBalancedMatchupsV2', { numPlayers, minMatchups, balancedMatchups, remainingMatchupOpponents, playerMatchupCount, numPlayersAtMatchup, currentMinMatchups, tries })
 
-  // return balancedMatchups;
+  return [
+    balancedMatchups,
+    playerMatchupCount,
+  ];
 }
 
 const matchupMap = [
