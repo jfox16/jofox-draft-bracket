@@ -40,10 +40,13 @@ export const NewBracketPage = () => {
       <div style={{marginTop: 20}}>
         <p style={{display: 'inline', marginRight: 5}}>Number of matches per player: </p>
         <input
-          onChange={(e) => setNumberOfMatchesPerPlayer(Number(e.target.value))}
           value={numberOfMatchesPerPlayer}
-          style={{display: 'span', width: 40}}
           type="number"
+          onChange={(e) => setNumberOfMatchesPerPlayer(Number(e.target.value))}
+          onFocus={(e) => e.target.select()} 
+          min={0}
+          max={100}
+          style={{display: 'span', width: 40}}
         />
       </div>
       <div style={{marginTop: 20}}>
