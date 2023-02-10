@@ -46,7 +46,7 @@ export const MatchList = () => {
         style={{
           border: '1px solid white',
           minWidth: 180,
-          background: (match.winner === undefined) ? '#292929' : '#191919',
+          background: (match.winner === undefined) ? 'none' : '#292929',
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -65,7 +65,7 @@ export const MatchList = () => {
       flexWrap: 'wrap',
       justifyContent: 'center',
     }}>
-      {Object.entries.length > 0 ? Object.entries(matchRecord).map(([key, match]) => (
+      {Object.entries.length > 0 ? Object.entries(matchRecord).map(([ key, match ]) => (
         <MatchListItem
           match={match}
           matchKey={key}
