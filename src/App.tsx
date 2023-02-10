@@ -3,6 +3,8 @@ import { AppRouter } from './AppRouter';
 import { BracketContext, useBracketContextValue } from './contexts/Bracket.context';
 import { PlayerContext, usePlayerContextValue } from './contexts/Player.context';
 
+import './styles.css';
+
 function App() {
   const playerContextValue = usePlayerContextValue();
   const bracketContextValue = useBracketContextValue();

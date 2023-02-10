@@ -8,7 +8,8 @@ export interface Player {
 
 export interface Match {
   name: string;
-  playerKeys: string[];
+  playerKeys: IdString[];
+  winner?: IdString;
 }
 
 
