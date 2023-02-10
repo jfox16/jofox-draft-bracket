@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useMemo, useState } from 'react';
 import { IdString, Match, MatchRecord } from '../util/types.util';
 import { makeUniqueKey } from '../makeUniqueKey';
 
@@ -7,7 +7,6 @@ interface IBracketContext {
   setMatchRecord: (matchRecord: MatchRecord) => void;
   createMatch: (matchValues?: Partial<Match>) => void;
   matchCounts: Record<IdString, number>;
-  setMatchCounts: (matchCounts: Record<IdString, number>) => void,
   updateMatch: (key: IdString, matchValues: Partial<Match>) => void;
 }
 
@@ -15,7 +14,21 @@ export const BracketContext = createContext<IBracketContext>({} as IBracketConte
 
 export const useBracketContextValue = () => {
   const [ matchRecord, setMatchRecord ] = useState<MatchRecord>({});
-  const [ matchCounts, setMatchCounts ] = useState<Record<IdString, number>>({});
+
+  const matchCounts = useMemo(() => {
+    const counts: Record<IdString, number> = {};
+    Object.values(matchRecord).forEach((match: Match) => {
+      match.playerKeys.forEach((playerId) => {
+        if (counts[playerId]) {
+          counts[playerId]++;
+        }
+        else {
+          counts[playerId] = 1;
+        }
+      })
+    });
+    return counts;
+  }, [ matchRecord ]);
 
   const createMatch = (matchValues?: Partial<Match>) => {
     const key = makeUniqueKey('match');
@@ -32,7 +45,6 @@ export const useBracketContextValue = () => {
   }
 
   const updateMatch = (key: IdString, matchValues: Partial<Match>) => {
-    console.info('updateMatch', { key, matchValues })
     setMatchRecord({
       ...matchRecord,
       [key]: {
@@ -47,7 +59,6 @@ export const useBracketContextValue = () => {
     setMatchRecord,
     createMatch,
     matchCounts,
-    setMatchCounts,
     updateMatch
   }
 

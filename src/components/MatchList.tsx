@@ -28,15 +28,14 @@ export const MatchList = () => {
     }
 
     const getIcon = (playerKey: IdString) => {
-      const icon = (match.winner === playerKey || match.winner === undefined) ? '👑' : '';
       const style = {
         cursor: 'pointer',
-        opacity: (match.winner !== undefined) ? 1.0 : 0.5
+        opacity: (match.winner === playerKey) ? 1.0 : 0.5
       }
 
       const shouldShow = isHovered || match.winner === playerKey;
 
-      return shouldShow ? <span onClick={() => handleCrownClick(playerKey)} style={style}>{icon}</span> : <></>;
+      return shouldShow ? <span onClick={() => handleCrownClick(playerKey)} style={style}>👑</span> : <></>;
     }
 
     const player1Icon = getIcon(match.playerKeys[0]);

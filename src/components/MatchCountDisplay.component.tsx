@@ -33,7 +33,7 @@ export const MatchCountDisplay = () => {
 
   return playersToShow.length > 0 ? (
     <div style={{marginTop: 40}}>
-      <h3>Bracket Results</h3>
+      <h2>- Results -</h2>
       <table style={{margin: 'auto'}}>
         <thead>
           <tr>

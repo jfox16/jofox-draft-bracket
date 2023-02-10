@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PlayerList } from '../components/PlayerList';
 import { BracketDisplay } from '../components/BracketDisplay.component';
 import { getBalancedMatchups } from '../util/getBalancedMatchups';
@@ -10,14 +10,11 @@ import { makeUniqueKey } from '../makeUniqueKey';
 export const NewBracketPage = () => {
   const [ numberOfMatchesPerPlayer, setNumberOfMatchesPerPlayer ] = useState<number>(3);
   const { playerRecord } = useContext(PlayerContext);
-  const { setMatchRecord, setMatchCounts } = useContext(BracketContext);
+  const { setMatchRecord } = useContext(BracketContext);
 
   const makeBracket = () => {
     const playerIds = Object.keys(playerRecord);
-    const [
-      balancedMatchups,
-      matchCounts
-    ] = getBalancedMatchups(playerIds, numberOfMatchesPerPlayer);
+    const balancedMatchups = getBalancedMatchups(playerIds, numberOfMatchesPerPlayer);
     const matchRecord: MatchRecord = {}
     balancedMatchups.forEach((matchup: IdString[], i: number) => {
       matchRecord[makeUniqueKey('match')] = {
@@ -26,15 +23,18 @@ export const NewBracketPage = () => {
       };
     });
     setMatchRecord(matchRecord);
-    setMatchCounts(matchCounts);
   }
+
+  useEffect(() => {
+    makeBracket();
+  }, []);
 
   return (
     <div>
       <h1>Generate a Draft Bracket</h1>
       <PlayerList editable />
       <div style={{marginTop: 20}}>
-        <p style={{display: 'inline', marginRight: 5}}>Number of matches per player</p>
+        <p style={{display: 'inline', marginRight: 5}}>Number of matches per player: </p>
         <input
           onChange={(e) => setNumberOfMatchesPerPlayer(Number(e.target.value))}
           value={numberOfMatchesPerPlayer}

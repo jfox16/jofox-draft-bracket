@@ -14,38 +14,6 @@ const shuffleArray = (array: any[]) => {
   return array;
 }
 
-export const getBalancedMatchups = (
-  playerIds: IdString[],
-  minNumMatchupsPerPlayer: number,
-  randomized: boolean = true
-): [
-  IdString[][],
-  Record<IdString, number>
-] => {
-    if (playerIds.length > 8) {
-      return [] as any;
-  }
-
-  const [indexMatchups, indexMatchupCounts ] = getBalancedMatchupsV2(playerIds.length, minNumMatchupsPerPlayer);
-
-  if (randomized) {
-    shuffleArray(playerIds);
-  }
-
-  const idMatchups =  indexMatchups.map( ([ i1, i2 ]) => [ playerIds[i1], playerIds[i2] ] );
-  const idMatchupCounts: Record<IdString, number> = {};
-  for (let i = 0; i < indexMatchupCounts.length; i++) {
-    const id = playerIds[i];
-    const count = indexMatchupCounts[i];
-    idMatchupCounts[id] = count;
-  }
-
-  return [
-    idMatchups,
-    idMatchupCounts
-  ];
-}
-
 const getUniqueOpponents = (numPlayers: number) => {
   const uniqueOpponents: number[][] = Array(numPlayers);
 
@@ -54,10 +22,8 @@ const getUniqueOpponents = (numPlayers: number) => {
     const halfPlayers = Math.floor(numPlayers/2);
     // Add opponents from furthest to closest (if players were in a circle)
     for (let j = 0; j <= halfPlayers; j++) {
-      console.info(i, j)
       const closest = i + halfPlayers - j;
       const otherClosest = i + halfPlayers + j;
-      console.info(numPlayers, halfPlayers, closest, otherClosest);
       if (closest < numPlayers && closest !== i) {
         opp.push(closest);
       }
@@ -76,10 +42,7 @@ const getUniqueOpponents = (numPlayers: number) => {
 const getBalancedMatchupsV2 = (
   numPlayers: number,
   minMatchups: number,
-): [
-  number[][],
-  number[]
-] => {
+): number[][] => {
   const balancedMatchups: number[][] = [];
 
   const remainingMatchupOpponents: number[][] = getUniqueOpponents(numPlayers);
@@ -140,22 +103,37 @@ const getBalancedMatchupsV2 = (
       tries++;
     }
   }
-  
 
-  console.info('getBalancedMatchupsV2', { numPlayers, minMatchups, balancedMatchups, remainingMatchupOpponents, playerMatchupCount, numPlayersAtMatchup, currentMinMatchups, tries })
-
-  return [
-    balancedMatchups,
-    playerMatchupCount,
-  ];
+  return balancedMatchups;
 }
 
-const matchupMap = [
-  [[0,1], [0,2], [0,3], [0,4], [0,5], [0,6], [0,7]],
-  [[1,2], [1,3], [1,4], [1,5], [1,6], [1,7]],
-  [[2,3], [2,4], [2,5], [2,6], [2,7]],
-  [[3,4], [3,5], [3,6], [3,7]],
-  [[4,5], [4,6], [4,7]],
-  [[5,6], [5,7]],
-  [[6,7]] 
-];
+export const getBalancedMatchups = (
+  playerIds: IdString[],
+  minNumMatchupsPerPlayer: number,
+  randomized: boolean = true
+): IdString[][] => {
+
+  const balancedMatchups: IdString[][] = [];
+  const numUniqueMatchupsPerPlayer = playerIds.length - 1;
+  let remainingNumMatchups = minNumMatchupsPerPlayer;
+
+  while (remainingNumMatchups > 0) {
+    const numMatchupsToUse = Math.min(remainingNumMatchups, numUniqueMatchupsPerPlayer);
+  
+    if (randomized) {
+      shuffleArray(playerIds);
+    }
+
+    const indexMatchups = getBalancedMatchupsV2(playerIds.length, numMatchupsToUse);
+    console.info(indexMatchups);
+
+    indexMatchups.forEach( ([ i1, i2 ]) => {
+      const playerIdMatchup = [ playerIds[i1], playerIds[i2] ];
+      balancedMatchups.push(playerIdMatchup);
+    });
+
+    remainingNumMatchups -= numMatchupsToUse;
+  }
+
+  return balancedMatchups;
+}

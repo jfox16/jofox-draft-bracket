@@ -20,6 +20,8 @@ export const PlayerListItem = (props: PlayerListItemProps) => {
         <input
           value={player.name}
           onChange={(e) => updatePlayerName(e.target.value)}
+          onFocus={(e) => e.target?.select()}
+          autoComplete="off"
         />
         <button onClick={deletePlayer}>DELETE</button>
       </div>
