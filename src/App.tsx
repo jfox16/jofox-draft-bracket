@@ -5,9 +5,10 @@ import { PlayerContext, usePlayerContextValue } from './contexts/Player.context'
 
 import './styles.css';
 
-function App() {
+const App = () => {
   const playerContextValue = usePlayerContextValue();
   const bracketContextValue = useBracketContextValue();
+  console.info('App.tsx rerendering');
   return (
     <div className="App" style={{margin: 'auto', maxWidth: 800, paddingBottom: 40}}>
       <PlayerContext.Provider value={playerContextValue}>

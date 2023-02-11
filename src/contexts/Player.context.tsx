@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { makeNewPlayer } from "../util/Player.util";
 import { Player, PlayerRecord } from '../util/types.util';
 
@@ -13,7 +13,7 @@ interface IPlayerContext {
 
 const getInitialPlayerRecord = () => {
   return {
-    ...makeNewPlayer({ name: 'Player 1', color: 'white'}),
+    ...makeNewPlayer({ name: 'Player 1', color: 'white' }),
     ...makeNewPlayer({ name: 'Player 2', color: 'gray' }),
     ...makeNewPlayer({ name: 'Player 3', color: 'gray' }),
     ...makeNewPlayer({ name: 'Player 4', color: 'gray' }),
@@ -23,7 +23,13 @@ const getInitialPlayerRecord = () => {
 export const PlayerContext = createContext<IPlayerContext>({} as IPlayerContext);
 
 export const usePlayerContextValue = (): IPlayerContext => {
-  const [ playerRecord, setPlayerRecord ] = useState<PlayerRecord>(getInitialPlayerRecord());
+  const savedPlayerRecordString = localStorage.getItem('playerRecord');
+  const savedPlayerRecord = savedPlayerRecordString ? JSON.parse(savedPlayerRecordString) : null;
+  const [playerRecord, setPlayerRecord] = useState<PlayerRecord>(savedPlayerRecord || getInitialPlayerRecord());
+
+  useEffect(() => {
+    localStorage.setItem('playerRecord', JSON.stringify(playerRecord));
+  }, [playerRecord]);
 
   const addPlayer = (player?: Partial<Player>) => {
     if (Object.entries(playerRecord).length < 8) {
@@ -33,7 +39,7 @@ export const usePlayerContextValue = (): IPlayerContext => {
       });
     }
   }
-  
+
   const updatePlayer = (playerKey: string, player?: Partial<Player>): void => {
     const updatedPlayer = {
       ...playerRecord[playerKey],

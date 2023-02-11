@@ -20,7 +20,7 @@ export const MatchList = () => {
     const [ isHovered, setIsHovered ] = useState<boolean>(false);
 
     const handleCrownClick = (playerKey: IdString) => {
-      toggleMatchWinner(matchKey, playerKey)
+      toggleMatchWinner(matchKey, playerKey);
     }
 
     const getIcon = (playerKey: IdString) => {

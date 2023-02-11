@@ -7,6 +7,7 @@ import { PlayerContext } from '../contexts/Player.context';
 import { getBalancedMatchups } from '../util/getBalancedMatchups';
 import { IdString, MatchRecord } from '../util/types.util';
 import { makeUniqueKey } from '../makeUniqueKey';
+import { ResetLocalStorageButton } from '../components/ResetLocalStorageButton.component';
 
 export const NewBracketPage = () => {
   const [ numberOfMatchesPerPlayer, setNumberOfMatchesPerPlayer ] = useState<number>(3);
@@ -49,6 +50,7 @@ export const NewBracketPage = () => {
         <button onClick={makeBracket} style={{fontSize: 16, width: 206}}>Make Bracket</button>
       </div>
       <BracketDisplay />
+      <ResetLocalStorageButton />
     </div>
   )
 }
