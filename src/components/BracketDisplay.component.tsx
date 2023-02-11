@@ -1,4 +1,4 @@
-import { MatchCountDisplay } from "./MatchCountDisplay.component";
+import { ResultsDisplay } from "./ResultsDisplay.component";
 import { MatchList } from "./MatchList";
 
 export const BracketDisplay = () => {
@@ -6,7 +6,7 @@ export const BracketDisplay = () => {
   return (
     <div style={{marginTop: 40}}>
       <MatchList />
-      <MatchCountDisplay />
+      <ResultsDisplay />
     </div>
   )
 }

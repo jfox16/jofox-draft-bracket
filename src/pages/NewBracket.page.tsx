@@ -12,7 +12,7 @@ export const NewBracketPage = () => {
   const { playerRecord } = useContext(PlayerContext);
   const { setMatchRecord } = useContext(BracketContext);
 
-  const makeBracket = useCallback(() => {
+  const makeBracket = () => {
     const playerIds = Object.keys(playerRecord);
     const balancedMatchups = getBalancedMatchups(playerIds, numberOfMatchesPerPlayer);
     const matchRecord: MatchRecord = {}
@@ -23,15 +23,7 @@ export const NewBracketPage = () => {
       };
     });
     setMatchRecord(matchRecord);
-  }, [
-    numberOfMatchesPerPlayer,
-    playerRecord,
-    setMatchRecord
-  ]);
-
-  useEffect(() => {
-    makeBracket();
-  }, [ makeBracket ]);
+  }
 
   return (
     <div>

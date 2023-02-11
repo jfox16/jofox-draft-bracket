@@ -5,3 +5,45 @@ th, td {
 th {
   padding-bottom: 4px;
 }
+
+.matchListItem {
+  border: 1px solid white;
+  width: 160px;
+  padding: 16px 4px;
+}
+
+.matchListItem * {
+  margin: 0;
+}
+
+.matchListItem h3 {
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+.matchListItem .playerRow {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  max-width: 100%;
+}
+
+.matchListItem .playerRow .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matchListItem .playerRow .crown {
+  margin-top: -2px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.matchListItem .versus {
+  padding: 4px 0;
+}
+
+.resultsDisplay .resultIcon {
+  cursor: pointer;
+}

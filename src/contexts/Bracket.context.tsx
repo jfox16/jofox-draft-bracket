@@ -7,7 +7,7 @@ interface IBracketContext {
   setMatchRecord: (matchRecord: MatchRecord) => void;
   createMatch: (matchValues?: Partial<Match>) => void;
   matchCounts: Record<IdString, number>;
-  updateMatch: (key: IdString, matchValues: Partial<Match>) => void;
+  toggleMatchWinner: (key: IdString, winner: IdString) => void;
 }
 
 export const BracketContext = createContext<IBracketContext>({} as IBracketContext);
@@ -54,12 +54,22 @@ export const useBracketContextValue = () => {
     })
   }
 
+  const toggleMatchWinner = (matchKey: IdString, winner: IdString) => {
+    const match = matchRecord[matchKey];
+    updateMatch(
+      matchKey,
+      {
+        winner: (match.winner === winner) ? undefined : winner
+      }
+    )
+  }
+
   const bracketContextValue = {
     matchRecord,
     setMatchRecord,
     createMatch,
     matchCounts,
-    updateMatch
+    toggleMatchWinner
   }
 
   return bracketContextValue;
