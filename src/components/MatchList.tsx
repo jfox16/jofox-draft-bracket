@@ -50,7 +50,7 @@ export const MatchList = () => {
         <h3>{match.name}</h3>
         <div className="playerRow"><div className="name">{playerNames[0]}</div> {playerIcons[0]}</div>
         <p className="versus" style={{margin: 0}}> - VS - </p>
-        <p className="playerRow">{playerNames[1]} {playerIcons[1]}</p>
+        <p className="playerRow"><div className="name">{playerNames[1]}</div> {playerIcons[1]}</p>
       </div>
     );
   }

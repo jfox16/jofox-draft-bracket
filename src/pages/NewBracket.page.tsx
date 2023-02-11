@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react';
-import { PlayerList } from '../components/PlayerList';
+
 import { BracketDisplay } from '../components/BracketDisplay.component';
-import { getBalancedMatchups } from '../util/getBalancedMatchups';
-import { PlayerContext } from '../contexts/Player.context';
-import { IdString, MatchRecord } from '../util/types.util';
+import { PlayerList } from '../components/PlayerList';
 import { BracketContext } from '../contexts/Bracket.context';
+import { PlayerContext } from '../contexts/Player.context';
+import { getBalancedMatchups } from '../util/getBalancedMatchups';
+import { IdString, MatchRecord } from '../util/types.util';
 import { makeUniqueKey } from '../makeUniqueKey';
 
 export const NewBracketPage = () => {
@@ -38,7 +39,10 @@ export const NewBracketPage = () => {
           onFocus={(e) => e.target.select()} 
           min={0}
           max={100}
-          style={{display: 'span', width: 40}}
+          style={{
+            display: 'span',
+            width: 40
+          }}
         />
       </div>
       <div style={{marginTop: 20}}>
