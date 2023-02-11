@@ -7,22 +7,26 @@ const getPlayerResults = (
   playerKey: IdString,
   matchRecord: MatchRecord,
   toggleMatchWinner: (matchKey: IdString, playerKey: IdString) => void,
-): React.ReactNode[] => {
+): React.ReactNode => {
   let results: React.ReactNode[] = [];
   Object.entries(matchRecord).forEach(([matchKey, match]) => {
     if (match.playerKeys.includes(playerKey)) {
       results.push(
-        <span
+        <div
           className="resultIcon"
           onClick={() => toggleMatchWinner(matchKey, playerKey)}
           key={'resultIcon' + playerKey + matchKey}
         >
           {(match.winner === undefined) ? '⚪' : (match.winner === playerKey) ? '👑' : '❌'}
-        </span>
+        </div>
       );
     }
   });
-  return results;
+  return (
+    <div className="resultIconRow">
+      {results}
+    </div>
+  );
 }
 
 const getPlayerWinCount = (playerKey: IdString, matchRecord: MatchRecord): number => {
@@ -37,7 +41,7 @@ export const ResultsDisplay = () => {
   const { playerRecord } = useContext(PlayerContext);
   const { matchCounts, matchRecord, toggleMatchWinner } = useContext(BracketContext);
 
-  const playersToShow: { id: IdString, player: Player, count: number, results: React.ReactNode[], winCount: number }[] = [];
+  const playersToShow: { id: IdString, player: Player, count: number, results: React.ReactNode, winCount: number }[] = [];
   Object.entries(playerRecord).forEach(([ id, player ]) => {
     const count = matchCounts[id];
     const results = getPlayerResults(id, matchRecord, toggleMatchWinner);
