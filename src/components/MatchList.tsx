@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { BracketContext } from "../contexts/Bracket.context";
 import { PlayerContext } from "../contexts/Player.context";
-import { IdString, Match, Player } from "../util/types.util";
+import { IdString, Match } from "../util/types.util";
 
 interface MatchListItemProps {
   matchKey: IdString,
