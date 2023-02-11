@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PlayerList } from '../components/PlayerList';
 import { BracketDisplay } from '../components/BracketDisplay.component';
 import { getBalancedMatchups } from '../util/getBalancedMatchups';
