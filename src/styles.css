@@ -45,5 +45,6 @@ th {
 }
 
 .resultsDisplay .resultIcon {
+  display: inline-flex;
   cursor: pointer;
 }

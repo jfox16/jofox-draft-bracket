@@ -12,7 +12,11 @@ const getPlayerResults = (
   Object.entries(matchRecord).forEach(([matchKey, match]) => {
     if (match.playerKeys.includes(playerKey)) {
       results.push(
-        <span className="resultIcon" onClick={() => toggleMatchWinner(matchKey, playerKey)}>
+        <span
+          className="resultIcon"
+          onClick={() => toggleMatchWinner(matchKey, playerKey)}
+          key={'resultIcon' + playerKey + matchKey}
+        >
           {(match.winner === undefined) ? '⚪' : (match.winner === playerKey) ? '👑' : '❌'}
         </span>
       );
